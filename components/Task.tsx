@@ -1,5 +1,6 @@
 "use client"
 import { TaskType } from '@/types/tasktype';
+import { TaskBaseUrl } from '@/utils/baseUrl';
 import React from 'react'
 
 
@@ -44,25 +45,36 @@ const Task: React.FC<TaskProps> = ({ task, refetchTasks }) => {
         }
 
     }
-    const handleDelete: () => void = async () => {
+    const handleDelete = async () => {
         const userId = localStorage.getItem("userid");
         if (!userId) {
             window.location.href = "/sign-up";
+            return;
         }
-        const baseUrl = "http://localhost:8080/tasks/delete?userId=" + userId + "&taskId=" + task.id;
+
+        const baseUrl = `${TaskBaseUrl}?userId=${userId}&taskId=${task.id}`;
         const requestOptions = {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json"
-            }
-        }
+                "Content-Type": "application/json",
+            },
+        };
+
         try {
             const res = await fetch(baseUrl, requestOptions);
+
             if (!res.ok) {
                 throw new Error("Failed to delete task");
             }
-            const data = await res.json();
-            console.log("Task deleted successfully:", data);
+
+            const contentType = res.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                const data = await res.json();
+                console.log("Task deleted successfully:", data);
+            } else {
+                console.log("Task deleted successfully (no response body)");
+            }
+
             if (refetchTasks) {
                 refetchTasks();
             }
@@ -73,7 +85,8 @@ const Task: React.FC<TaskProps> = ({ task, refetchTasks }) => {
                 console.error("Unexpected error:", error);
             }
         }
-    }
+    };
+
     return (
         <li className='bg-gray-800 p-4 rounded-lg flex justify-between items-center w-full' title={task.description}>
             <span className='text-white'>{task.title}</span>
@@ -81,7 +94,9 @@ const Task: React.FC<TaskProps> = ({ task, refetchTasks }) => {
                 <button className="text-green-400 text-2xl" onClick={handleComplete}>
                     ✓
                 </button>
-                <button className="text-red-500 text-2xl">🗑</button>
+                <button className="text-red-500 text-2xl cursor-pointer" onClick={handleDelete}>
+                    🗑
+                </button>
             </div>
         </li>
     );
