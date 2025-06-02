@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 
 const Home = () => {
     const [username, setUsername] = useState<string>("");
@@ -20,7 +20,7 @@ const Home = () => {
             localStorage.setItem("userid", data.id);
             setUsername("");
             console.log("User created successfully:", data);
-            // Redirect to the chat page or perform any other action
+            window.location.href = "/";
         } catch (e) {
             if (e instanceof Error) {
                 console.error("Error creating user:", e.message);
@@ -31,6 +31,14 @@ const Home = () => {
             
         }
     }
+
+    useEffect(() => {
+        const userId = localStorage.getItem("userid");
+        if (!userId) {
+            return;
+        }
+        window.location.href = "/";
+    }, []);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-neutral-900 text-white px-4">

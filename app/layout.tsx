@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { useEffect, useState } from "react";
+import { TaskContext } from "@/contexts/TaskContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,12 +24,42 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [refetchTasks, setRefetchTasks] = useState(false);
+  const fetchTasks = async () => {
+    const userId = localStorage.getItem("userid");
+    if (!userId) {
+      window.location.href = "/sign-up";
+      return;
+    }
+    const baseUrl = `http://localhost:8080/tasks?userId=${userId}`;
+    try {
+      const response = await fetch(baseUrl);
+      if (!response.ok) {
+        throw new Error("Failed to fetch tasks");
+      }
+      const data = await response.json();
+      setTasks(data);
+      console.log("Tasks fetched successfully:", data);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  }
+  useEffect(() => {
+    fetchTasks();
+  }, [refetchTasks]);
+
+  const handleRefetch = () => {
+    setRefetchTasks(!refetchTasks);
+  }
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <TaskContext.Provider value={{ tasks, refetchTasks: handleRefetch }}>
+          {children}
+        </TaskContext.Provider>
       </body>
     </html>
   );
