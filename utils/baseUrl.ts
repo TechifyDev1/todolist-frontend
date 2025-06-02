@@ -1,0 +1,1 @@
+export const TaskBaseUrl: string = "http://localhost:8080/tasks";
