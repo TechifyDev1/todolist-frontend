@@ -32,13 +32,13 @@ const Home = () => {
         }
     }
 
-    useEffect(() => {
-        const userId = localStorage.getItem("userid");
-        if (!userId) {
-            return;
-        }
-        window.location.href = "/";
-    }, []);
+    // useEffect(() => {
+    //     const userId = localStorage.getItem("userid");
+    //     if (!userId) {
+    //         return;
+    //     }
+    //     window.location.href = "/";
+    // }, []);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-neutral-900 text-white px-4">
