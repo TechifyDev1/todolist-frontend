@@ -37,7 +37,11 @@ const Task: React.FC<TaskProps> = ({ task, refetchTasks }) => {
             if (refetchTasks) {
                 refetchTasks();
             }
-            toast.success("Task marked as complete successfully");
+            toast.success(
+                task.completed
+                    ? "Task marked as incomplete successfully"
+                    : "Task marked as complete successfully"
+            );
         } catch (error) {
             if (error instanceof Error) {
                 console.error("Error updating task:", error.message);
