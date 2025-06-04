@@ -102,7 +102,7 @@ const MainSection = () => {
                 {tasks.length === 0 ? (
                     <li className="text-gray-400 text-center">No tasks found.</li>
                 ) : (
-                    console.log(tasks),
+                    // console.log(tasks),
                     tasks.map((task: TaskType, idx: number) => <Task key={idx} task={task} refetchTasks={refetchTasks} />)
                 )}
             </ul>

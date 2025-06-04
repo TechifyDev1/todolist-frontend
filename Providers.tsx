@@ -13,7 +13,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const fetchTasks = async () => {
-        console.log("Fetching tasks...");
+        // console.log("Fetching tasks...");
       const userId = localStorage.getItem("userid");
       if (!userId && pathname !== "/sign-up") {
         window.location.href = "/sign-up";
@@ -25,7 +25,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         const data = await res.json();
         setTasks(data);
         // console.log("Tasks fetched successfully:", data);
-        toast.success("Your tasks are ready to go!");
+        // toast.success("Your tasks are ready to go!");
       } catch (err) {
         console.error("fetch error:", err);
         if (err instanceof Error) {
