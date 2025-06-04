@@ -3,19 +3,22 @@
 import { useEffect, useState } from "react";
 import { TaskContext } from "@/contexts/TaskContext";
 import { TaskBaseUrl } from "@/utils/baseUrl";
+import { usePathname } from "next/navigation";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [tasks, setTasks] = useState<any[]>([]);
   const [refetchTasks, setRefetchTasks] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const fetchTasks = async () => {
         console.log("Fetching tasks...");
       const userId = localStorage.getItem("userid");
-      if (!userId) {
+      if (!userId && pathname !== "/sign-up") {
         window.location.href = "/sign-up";
         return;
       }
+      if (!userId) return;
       try {
         const res = await fetch(`${TaskBaseUrl}/all?userId=${userId}`);
         const data = await res.json();
