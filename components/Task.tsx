@@ -15,7 +15,7 @@ const Task: React.FC<TaskProps> = ({ task, refetchTasks }) => {
         if (!userId) {
             window.location.href = "/sign-up";
         }
-        const baseUrl = TaskBaseUrl + userId + "&taskId=" + task.id;
+        const baseUrl = `${TaskBaseUrl}/complete${userId}&taskId=${task.id}`;
         const requestOptions = {
             method: "PUT",
             headers: {
