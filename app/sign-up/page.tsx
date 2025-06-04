@@ -6,7 +6,7 @@ const Home = () => {
     const handleSignUp = async (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Creating user with username:", username);
-        const baseUrl = "http://localhost:8080/users";
+        const baseUrl = "https://todolist-backend-production-4f1b.up.railway.app/users";
         const requestOptions = {
             method: "POST",
             headers: {

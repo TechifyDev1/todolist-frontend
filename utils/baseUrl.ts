@@ -1,1 +1,1 @@
-export const TaskBaseUrl: string = "http://localhost:8080/tasks";
+export const TaskBaseUrl: string = "https://todolist-backend-production-4f1b.up.railway.app/tasks";

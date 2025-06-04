@@ -85,16 +85,69 @@ const Task: React.FC<TaskProps> = ({ task, refetchTasks }) => {
                 console.error("Unexpected error:", error);
             }
         }
+        const handleMarkAsComplete = async () => {
+            const userId = localStorage.getItem("userid");
+            if (!userId) {
+                window.location.href = "/sign-up";
+                return;
+            }
+            const baseUrl = `${TaskBaseUrl}/complete?userId=${userId}&taskId=${task.id}`;
+            const requestOptions = {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    completed: !task.completed,
+                    id: task.id,
+                }),
+            };
+
+            try {
+                const res = await fetch(baseUrl, requestOptions);
+                if (!res.ok) {
+                    throw new Error("Failed to mark task as complete");
+                }
+                const data = await res.json();
+                console.log("Task marked as complete successfully:", data);
+                if (refetchTasks) {
+                    refetchTasks();
+                }
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.error("Error marking task as complete:", error.message);
+                } else {
+                    console.error("Unexpected error:", error);
+                }
+            }
+        }
     };
 
     return (
-        <li className='bg-gray-800 p-4 rounded-lg flex justify-between items-center w-full' title={task.description}>
-            <span className='text-white'>{task.title}</span>
-            <div className="flex gap-3 items-center">
-                <button className="text-green-400 text-2xl" onClick={handleComplete}>
+        <li
+            className="bg-gray-800 p-3 rounded-lg flex justify-between items-center"
+            title={task.description}
+        >
+            <span
+                className={`text-base transition-colors ${task.completed ? "line-through text-gray-400" : "text-white"
+                    }`}
+            >
+                {task.title}
+            </span>
+
+            <div className="flex gap-2">
+                <button
+                    onClick={handleComplete}
+                    className="text-green-500 hover:text-green-400 transition"
+                    aria-label="Mark as complete"
+                >
                     ✓
                 </button>
-                <button className="text-red-500 text-2xl cursor-pointer" onClick={handleDelete}>
+                <button
+                    onClick={handleDelete}
+                    className="text-red-500 hover:text-red-400 transition"
+                    aria-label="Delete task"
+                >
                     🗑
                 </button>
             </div>
