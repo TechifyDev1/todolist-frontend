@@ -1,5 +1,6 @@
 "use client";
 import React, { ChangeEvent, useEffect, useState } from 'react'
+import { toast } from 'sonner';
 
 const Home = () => {
     const [username, setUsername] = useState<string>("");
@@ -19,15 +20,19 @@ const Home = () => {
             const data = await res.json();
             localStorage.setItem("userid", data.id);
             setUsername("");
-            console.log("User created successfully:", data);
+            // console.log("User created successfully:", data);
+            toast.success("You're signed up now, ride on!");
             window.location.href = "/";
         } catch (e) {
             if (e instanceof Error) {
                 console.error("Error creating user:", e.message);
+                toast.error(`Error creating user: ${e.message}`);
             } else {
                 console.error("Unexpected error:", e);
+                toast.error("Unexpected error occurred while creating user");
             }
             console.error("Error creating user:", e);
+            toast.error("That didn't work, try again!");
             
         }
     }

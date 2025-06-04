@@ -2,6 +2,7 @@
 import { TaskType } from '@/types/tasktype';
 import { TaskBaseUrl } from '@/utils/baseUrl';
 import React from 'react'
+import { toast } from 'sonner';
 
 
 interface TaskProps {
@@ -32,15 +33,18 @@ const Task: React.FC<TaskProps> = ({ task, refetchTasks }) => {
                 throw new Error("Failed to update task");
             }
             const data = await res.json();
-            console.log("Task updated successfully:", data);
+            // console.log("Task updated successfully:", data);
             if (refetchTasks) {
                 refetchTasks();
             }
+            toast.success("Task marked as complete successfully");
         } catch (error) {
             if (error instanceof Error) {
                 console.error("Error updating task:", error.message);
+                toast.error(`Error updating task: ${error.message}`);
             } else {
                 console.error("Unexpected error:", error);
+                toast.error("Unexpected error occurred while updating task");
             }
         }
 
@@ -70,9 +74,11 @@ const Task: React.FC<TaskProps> = ({ task, refetchTasks }) => {
             const contentType = res.headers.get("content-type");
             if (contentType && contentType.includes("application/json")) {
                 const data = await res.json();
-                console.log("Task deleted successfully:", data);
+                // console.log("Task deleted successfully:", data);
+                toast.success("Task deleted successfully");
             } else {
                 console.log("Task deleted successfully (no response body)");
+                toast.success("Task deleted successfully");
             }
 
             if (refetchTasks) {
@@ -81,44 +87,10 @@ const Task: React.FC<TaskProps> = ({ task, refetchTasks }) => {
         } catch (error) {
             if (error instanceof Error) {
                 console.error("Error deleting task:", error.message);
+                toast.error(`Error deleting task: ${error.message}`);
             } else {
                 console.error("Unexpected error:", error);
-            }
-        }
-        const handleMarkAsComplete = async () => {
-            const userId = localStorage.getItem("userid");
-            if (!userId) {
-                window.location.href = "/sign-up";
-                return;
-            }
-            const baseUrl = `${TaskBaseUrl}/complete?userId=${userId}&taskId=${task.id}`;
-            const requestOptions = {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    completed: !task.completed,
-                    id: task.id,
-                }),
-            };
-
-            try {
-                const res = await fetch(baseUrl, requestOptions);
-                if (!res.ok) {
-                    throw new Error("Failed to mark task as complete");
-                }
-                const data = await res.json();
-                console.log("Task marked as complete successfully:", data);
-                if (refetchTasks) {
-                    refetchTasks();
-                }
-            } catch (error) {
-                if (error instanceof Error) {
-                    console.error("Error marking task as complete:", error.message);
-                } else {
-                    console.error("Unexpected error:", error);
-                }
+                toast.error("Unexpected error occurred while deleting task");
             }
         }
     };

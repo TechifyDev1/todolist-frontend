@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { TaskContext } from "@/contexts/TaskContext";
 import { TaskBaseUrl } from "@/utils/baseUrl";
 import { usePathname } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -23,9 +24,16 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         const res = await fetch(`${TaskBaseUrl}/all?userId=${userId}`);
         const data = await res.json();
         setTasks(data);
-        console.log("Tasks fetched successfully:", data);
+        // console.log("Tasks fetched successfully:", data);
+        toast.success("Your tasks are ready to go!");
       } catch (err) {
         console.error("fetch error:", err);
+        if (err instanceof Error) {
+          toast.error(`Error fetching tasks: ${err.message}`);
+        } else {
+          toast.error("Unexpected error occurred while fetching tasks");
+        }
+        // setTasks([]);
       }
     };
     fetchTasks();

@@ -4,6 +4,7 @@ import Task from './Task'
 import { useTaskContext } from '@/contexts/TaskContext'
 import { TaskType } from '@/types/tasktype';
 import { TaskBaseUrl } from '@/utils/baseUrl';
+import { toast } from 'sonner';
 
 
 
@@ -26,7 +27,8 @@ const MainSection = () => {
             return;
         }
         if (!taskTitle.trim()) {
-            alert("Task title cannot be empty");
+            // alert("Task title cannot be empty");
+            toast.error("Task title cannot be empty");
             return;
         }
         const baseUrl = TaskBaseUrl + "/create?userId=" + userId;
@@ -48,21 +50,24 @@ const MainSection = () => {
                 throw new Error("Failed to create task");
             }
             const data = await res.json();
-            console.log("Task created successfully:", data);
+            // console.log("Task created successfully:", data);
             setTaskTitle('');
             setTaskDescription('');
             if (refetchTasks) {
                 refetchTasks();
             }
+            toast.success("Task created successfully");
         } catch (error) {
             if (error instanceof Error) {
                 console.error("Error creating task:", error.message);
+                toast.error(`Error creating task: ${error.message}`);
             } else {
                 console.error("Unexpected error:", error);
+                toast.error("Unexpected error occurred while creating task");
             }
         }
     }
-    console.log(tasks)
+    // console.log(tasks)
     return (
         <main className="flex flex-col items-center w-full h-full mt-30" onSubmit={handleSubmit}>
             <form action="" className="flex flex-col gap-4 mt-6">
