@@ -31,6 +31,7 @@ const MainSection = () => {
         if (!taskTitle.trim()) {
             // alert("Task title cannot be empty");
             toast.error("Task title cannot be empty");
+            setIsLoading(false);
             return;
         }
         const baseUrl = TaskBaseUrl + "/create?userId=" + userId;
