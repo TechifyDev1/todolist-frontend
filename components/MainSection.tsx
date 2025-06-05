@@ -19,8 +19,10 @@ const MainSection = () => {
     const { tasks, refetchTasks } = useTaskContext();
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsLoading(true);
         const userId = localStorage.getItem("userid");
         if (!userId) {
             window.location.href = "/sign-up";
@@ -57,6 +59,7 @@ const MainSection = () => {
                 refetchTasks();
             }
             toast.success("Task created successfully");
+            setIsLoading(false);
         } catch (error) {
             if (error instanceof Error) {
                 console.error("Error creating task:", error.message);
@@ -65,6 +68,9 @@ const MainSection = () => {
                 console.error("Unexpected error:", error);
                 toast.error("Unexpected error occurred while creating task");
             }
+            setIsLoading(false);
+        } finally {
+            setIsLoading(false);
         }
     }
     // console.log(tasks)
@@ -93,8 +99,11 @@ const MainSection = () => {
                 <button
                     type="submit"
                     className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-all self-end"
+                    disabled={isLoading}
                 >
-                    Submit
+                    {isLoading ? (<div className='flex justify-center'>
+                        <div className='animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-gray-600'></div>
+                    </div>) : ("Add Task")}
                 </button>
             </form>
 
