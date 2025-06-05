@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 
 const Home = () => {
     const [username, setUsername] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const handleSignUp = async (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Creating user with username:", username);
@@ -65,8 +66,11 @@ const Home = () => {
                 <button
                     type="submit"
                     className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-semibold"
+                    disabled={isLoading}
                 >
-                    Create Account
+                    {isLoading ? (<div className='flex justify-center'>
+                        <div className='animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-gray-600'></div>
+                    </div>) : ("Sign Up")}
                 </button>
             </form>
         </div>
